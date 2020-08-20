@@ -1,0 +1,49 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <cmath>
+#include <malloc.h>
+
+using namespace std;
+class Sum {
+private:
+	int Pre;
+	int last;
+public:
+	Sum(int i,int j):Pre(i),last(j) {
+		cout << "调用了构造函数" << "Sum" << i << "&" << j << endl;
+	}
+	Sum() {}
+	Sum(const Sum& C) {
+		this->Pre = C.Pre;
+		this->last = C.last;
+		cout << "调用了拷贝构造函数" << endl;
+	}
+	~Sum() {
+		cout<<"调用了析构函数" << endl;
+	}
+	Sum& operator= (const Sum& C) {
+		if (&C != this) {
+			this->Pre = C.Pre+1;
+			this->last = C.last+1;//为了区分调用的是拷贝构造函数还是赋值运算符
+			cout << "使用了赋值运算符" << endl;
+		}
+		return *this;
+	}
+	
+	
+	void Show() {
+		cout << "Pre   " << Pre<<endl;
+		cout << "last  " << last << endl;
+	}
+};
+
+int main() {
+	Sum S1(3,5);
+	Sum S2(4, 7);
+
+	Sum S3;
+	S3 = S2;//此处调用的是赋值运算符，而Sum S4=S2;是进行初始化，从而调用拷贝构造函数。
+	S3.Show();
+	return 0;
+}
