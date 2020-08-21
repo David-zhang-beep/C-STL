@@ -1,0 +1,171 @@
+/*
+约瑟夫问题
+循环链表实现
+@20200821
+@version 1.0
+
+*/
+#include <iostream>
+#include <string>
+#include <vector>
+#include <cmath>
+#include<queue>
+#include<string>
+#include <malloc.h>
+using namespace std;
+
+struct Node
+{
+	int data;
+	Node * next;
+};
+
+struct LinkedList
+{
+	Node *pHead;
+	Node *pTail;
+	int len;
+};
+
+//建立个节点
+Node * GetNode(int i)
+{
+	Node * p = (Node *)malloc(sizeof(Node));
+	if (p != NULL && i >= 0)
+	{
+		p->data = i;
+		p->next = NULL;
+		return p;
+
+	}
+	else
+	{
+
+		cout << "error" << endl;
+		exit(-1);
+		return NULL;
+	}
+}
+
+//建立链表
+LinkedList* CreateLinkedList(int i)
+{
+	Node* node = GetNode(0);
+	LinkedList *head = (LinkedList*)malloc(sizeof(LinkedList));
+	if (head == NULL)
+	{
+		cout << "CreateLinkedList:memory error" << endl;
+		exit(-1);
+		return NULL;
+	}
+	if (i <= 0)
+	{
+		cout << "CreateLinkedList: error" << endl;
+		exit(-1);
+		return NULL;
+	}
+
+	head->pHead = node;
+	head->pTail = node;
+	head->len = 1;
+	if (i == 1)
+	{
+		node->next = node;
+	}
+	else
+	{
+		Node *p = head->pHead;
+		for (int j = 1; j <= i - 1; j++)
+		{
+			Node* node = GetNode(j);
+			node->data = j;
+			p->next = node;
+			p = p->next;
+			head->len++;
+		}
+		head->pTail = p;
+		p->next = head->pHead;
+	}
+	return head;
+
+}
+
+// 删除节点
+void RemoveNode(LinkedList*head, Node *deleNode)
+{
+	Node* p = head->pHead;
+	cout << deleNode->data << endl;
+	if (p != NULL) {
+		if (head->len > 1) {
+			do
+			{
+				if (p->data == deleNode->data)
+				{
+					if (p == head->pHead)
+					{
+						head->pHead = p->next;
+					}
+					if (p == head->pTail)
+					{
+						head->pTail = p->next;
+					}
+					p->data = p->next->data;
+					p->next = p->next->next;
+					head->len--;
+					return;
+
+				}
+				else {
+					p = p->next;
+				}
+			} while (p != head->pHead);
+		}
+		else
+		{
+			cout << "error";
+			exit(-1);
+			return;
+		}
+	}
+	else
+	{
+		return;
+	}
+}
+
+int Joseph(int m, int k)
+{
+	if (m <= 0 || k <= 0)
+	{
+		cout << "error:input" << endl;
+		return -1;
+	}
+	LinkedList* list = CreateLinkedList(m);
+	//Print_List(list);
+	Node * p = list->pHead;
+
+	for (int i = 1; i <= k; i++)
+	{
+		if (list->len == 1)
+		{
+			return p->data;
+		}
+		if (i == k)
+		{
+			RemoveNode(list, p);
+			i = 1;
+		}
+		p = p->next;
+	}
+	return 0;
+
+}
+int main(int argc, int* argv[])
+{
+
+
+	cout << "循环列表" << endl;
+	cout << Joseph(6, 3) << endl;
+	getchar();
+	return 0;
+}
